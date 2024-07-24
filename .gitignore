@@ -1,0 +1,30 @@
+# Бинарные файлы
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Локальные настройки
+*.env
+*.local
+
+# Кэш
+*.log
+*.tmp
+*.swp
+
+# Go-specific
+bin/
+pkg/
+vendor/
+
+# IDE/Editor-specific
+.vscode/
+.idea/
+*.suo
+*.ntvs_analysis.dat
+*.njsproj
+*.sln
+*.sw?
+*.DS_Store
