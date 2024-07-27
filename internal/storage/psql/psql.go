@@ -5,23 +5,34 @@ import (
 	"test/pkg/domain"
 	"test/pkg/storage"
 
-	//"go.uber.org/zap"
-	//"gorm.io/driver/sqlite"
+	"go.uber.org/zap"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-/*
 type PSQL struct {
 	config *Config
 	logger *zap.Logger
 	db     *gorm.DB
 }
-*/
 
-/*
 func NewPSQL(config *Config, logger *zap.Logger) (*PSQL, error) {
 
-	db, err := gorm.Open(sqlite.Open(config.Path), &gorm.Config{})
+	// Проверка на отсутствие обязательных параметров
+	if config.Host == "" || config.Port == "" || config.DBUser == "" || config.DBPass == "" || config.DBName == "" || config.SSLMode == "" {
+		fmt.Println("Ошибка: Все параметры подключения к базе данных должны быть указаны.")
+	}
+	fmt.Printf("host %s \n", config.Host)
+	fmt.Printf("port %s \n", config.Port)
+	fmt.Printf("user %s \n", config.DBUser)
+	fmt.Printf("pass %s \n", config.DBPass)
+	fmt.Printf("name %s \n", config.DBName)
+	fmt.Printf("ssl  %s \n", config.SSLMode)
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
+		config.Host, config.DBUser, config.DBPass, config.DBName, config.Port, config.SSLMode)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
@@ -36,8 +47,8 @@ func NewPSQL(config *Config, logger *zap.Logger) (*PSQL, error) {
 		db:     db,
 	}, nil
 }
-*/
 
+/*
 type PSQL struct {
 	db *gorm.DB // Поле для хранения соединения с базой данных
 }
@@ -45,8 +56,8 @@ type PSQL struct {
 func NewPSQL(db *gorm.DB) *PSQL {
 
 	return &PSQL{db: db}
-
 }
+*/
 
 func (p *PSQL) CreateMsg(msg *domain.Msg) (*storage.Msg, error) {
 

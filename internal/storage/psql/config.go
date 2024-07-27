@@ -5,12 +5,13 @@ import (
 )
 
 type Config struct {
-	Host   string `env:"HOST"`
-	Port   string `env:"PORT"`
-	DBName string `env:"DB_NAME"`
-	DBUser string `env:"DB_USER"`
-	DBPass string `env:"DB_PASS"`
-	Path   string `env:"PATH"`
+	Host    string `env:"HOST"`
+	Port    string `env:"PORT"`
+	DBName  string `env:"DB_NAME"`
+	DBUser  string `env:"DB_USER"`
+	DBPass  string `env:"DB_PASS"`
+	SSLMode string `env:"SSL_MODE"`
+	Path    string `env:"PATH"`
 }
 
 func NewConfig() *Config {

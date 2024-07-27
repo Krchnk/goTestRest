@@ -1,32 +1,44 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"test/internal/storage/psql"
 	"test/pkg/domain"
-	"test/pkg/storage"
 	"time"
 
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"go.uber.org/zap"
 )
 
 func main() {
 	fmt.Println("start")
+	/*
+		// Инициализация базы данных
+		db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+		if err != nil {
+			panic("failed to connect database")
+		}
+		// Автоматическая миграция структуры Msg
+		db.AutoMigrate(&storage.Msg{})
+		// Создание экземпляра структуры PSQL
+		p := psql.NewPSQL(db)
+	*/
 
-	// Инициализация базы данных
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	conf := psql.NewConfig()
+	conf.Parse()
+
+	logger, err := zap.NewDevelopment()
 	if err != nil {
-		panic("failed to connect database")
+		panic(err)
 	}
+	defer logger.Sync()
 
-	// Автоматическая миграция структуры Msg
-	db.AutoMigrate(&storage.Msg{})
-
-	// Создание экземпляра структуры PSQL
-	p := psql.NewPSQL(db)
+	p, err := psql.NewPSQL(conf, logger)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println("start server")
 	mux := http.NewServeMux()
@@ -49,7 +61,14 @@ func main() {
 			fmt.Printf("Сообщение создано: ID = %d, Text = %s\n", createdMsg.ID, createdMsg.Text)
 		}
 
-		fmt.Fprintf(w, "response")
+		msgs, _ := p.ReadAllMsgs()
+
+		msgsJSON, _ := json.Marshal(msgs)
+
+		jsonString := string(msgsJSON)
+
+		fmt.Fprintf(w, jsonString)
+		//fmt.Fprintf(w, "responce")
 	})
 
 	if err := http.ListenAndServe("localhost:8080", mux); err != nil {
